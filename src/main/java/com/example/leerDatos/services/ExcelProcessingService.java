@@ -9,23 +9,30 @@ import com.example.leerDatos.entitys.TransaccionDTO;
 
 public class ExcelProcessingService {
 
+	private DataAnalysisService dataAnalysisService;
+	private  DataNormalizationService normalizationService;
+	private  DataTransformationService transformationService;
+	private DataCleaningService cleaningService;
+
+
 	 public ExcelProcessingService(DataCleaningService cleaningService,
 	DataNormalizationService normalizationService,
-    DataTransformationService transformationService){
+    DataTransformationService transformationService, DataAnalysisService dataAnalysisService){
 		 
 		this.cleaningService = cleaningService;
 		this.normalizationService = normalizationService;
 		this.transformationService = transformationService;
+		this.dataAnalysisService = dataAnalysisService;
 	}
 
-	public void procesarExcel(MultipartFile file) {
+	public ResumDto procesarExcel(MultipartFile file) {
 		List<TransaccionDTO> datos = leerExcel(file);
-
+//definir un metodo pipeline que itere todos los procesos que deben atravezar los datos
 		datos = cleaningService.limpiar(datos);
 		datos = normalizationService.normalizar(datos);
 		datos = transformationService.transformar(datos);
+		 return	dataAnalysisService.analizar(datos);
 
-//acá teóricamente enviamos para a análisis(no hace falta que lo hagas aún)
 	}
 
 	private List<TransaccionDTO> leerExcel(MultipartFile file) {
@@ -33,5 +40,7 @@ public class ExcelProcessingService {
 
 		return lista;
 	}
+
+
 
 }
