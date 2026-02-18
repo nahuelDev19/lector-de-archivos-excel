@@ -3,7 +3,6 @@ package com.example.leerDatos.entitys;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter @Setter
