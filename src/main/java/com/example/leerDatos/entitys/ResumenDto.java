@@ -1,8 +1,12 @@
 package com.example.leerDatos.entitys;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import java.util.Set;
 
+@Getter @Setter
 public class ResumenDto {
 
     private int montoTotal;
@@ -10,6 +14,9 @@ public class ResumenDto {
     private Set<String> separarPorTipoMoneda;
     private int montoMaximo;
     private int montoMinimo;
+    private Set<String> tipo;
+    private Set<String> categoria;
+
 
     public ResumenDto() {
     }
@@ -22,43 +29,9 @@ public class ResumenDto {
         this.montoMinimo = montoMinimo;
     }
 
-    public int getMontoTotal() {
-        return montoTotal;
-    }
-
-    public void setMontoTotal(int montoTotal) {
-        this.montoTotal = montoTotal;
-    }
-
-    public int getCantidadClientes() {
-        return cantidadClientes;
-    }
-
-    public void setCantidadClientes(int cantidadClientes) {
-        this.cantidadClientes = cantidadClientes;
-    }
-
-    public Set<String> getSepararPorTipoMoneda() {
-        return separarPorTipoMoneda;
-    }
-
-    public void setSepararPorTipoMoneda(Set<String> separarPorTipoMoneda) {
-        this.separarPorTipoMoneda = separarPorTipoMoneda;
-    }
-
-    public int getMontoMaximo() {
-        return montoMaximo;
-    }
-
-    public void setMontoMaximo(int montoMaximo) {
-        this.montoMaximo = montoMaximo;
-    }
-
-    public int getMontoMinimo() {
-        return montoMinimo;
-    }
-
-    public void setMontoMinimo(int montoMinimo) {
-        this.montoMinimo = montoMinimo;
+    public ResumenDto(int montoTotal, int cantidadClientes, Set<String> separarPorTipoMoneda, int montoMaximo, int montoMinimo,Set<String> tipo, Set<String> categoria) {
+        this(montoTotal,cantidadClientes,separarPorTipoMoneda,montoMaximo,montoMinimo);
+        this.tipo = tipo;
+        this.categoria = categoria;
     }
 }

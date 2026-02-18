@@ -1,7 +1,10 @@
 package com.example.leerDatos.entitys;
 
 import com.poiji.annotation.ExcelCellName;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 public class TransaccionDTO {
     
 	
@@ -13,33 +16,25 @@ public class TransaccionDTO {
 	private String monto;
 	@ExcelCellName("moneda")
 	private String moneda;
-	
-    public String getFecha() {
-		return fecha;
+
+	private String tipo; // INGRESO o EGRESO
+	private String categoria; // ejemplo: comida, sueldo, alquiler
+
+	public TransaccionDTO() {
+
 	}
-	public void setFecha(String fecha) {
+	public TransaccionDTO(String fecha, String cliente, String monto, String moneda) {
 		this.fecha = fecha;
-	}
-	public String getCliente() {
-		return cliente;
-	}
-	public void setCliente(String cliente) {
 		this.cliente = cliente;
-	}
-	public String getMonto() {
-		return monto;
-	}
-	public void setMonto(String monto) {
 		this.monto = monto;
-	}
-	public String getMoneda() {
-		return moneda;
-	}
-	public void setMoneda(String moneda) {
 		this.moneda = moneda;
+
 	}
 
-    // getters y setters
-    
-    
+	public TransaccionDTO(String fecha, String cliente, String monto, String moneda, String tipo, String categoria) {
+		this(fecha, cliente, monto, moneda);
+		this.tipo = tipo;
+		this.categoria = categoria;
+	}
 }
+

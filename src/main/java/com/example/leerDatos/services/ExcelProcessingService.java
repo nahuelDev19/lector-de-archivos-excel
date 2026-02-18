@@ -46,13 +46,10 @@ public class ExcelProcessingService {
 	//mio
 	private List<Transaccion> miPipeline(List<TransaccionDTO> datos){
 		 List<Transaccion> transacciones= new ArrayList<>();
-		 for (TransaccionDTO dto: datos){
-		datos = cleaningService.limpiar(datos);
-		datos = normalizationService.normalizar(datos);
-		transacciones = transformationService.transformar(datos);
-		 }
-
-        return transacciones;
+			 List<TransaccionDTO> limpieza=cleaningService.limpiar(datos);
+			 List<TransaccionDTO> normalizado= normalizationService.normalizar(limpieza);
+			 transacciones = transformationService.transformar(normalizado);
+		 return  transacciones ;
     }
 
 

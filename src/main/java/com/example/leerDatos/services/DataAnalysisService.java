@@ -8,6 +8,7 @@ import java.util.*;
 public class DataAnalysisService {
 
 
+
     private int montoTotal(List<Transaccion> transacciones){
         int totalMonto =0 ;
         for (Transaccion tran: transacciones){
@@ -55,15 +56,33 @@ public class DataAnalysisService {
         return  montoMin;
     }
 
+    private Set<String>  porTipo(List<Transaccion> transacciones){
+        Set<String> tipo= new HashSet<>();
+        for (Transaccion tran: transacciones){
+            tipo.add(tran.getTipo());
+        }
+        return  tipo;
+    }
+
+    private Set<String>  porCategoria(List<Transaccion> transacciones){
+        Set<String> categoria= new HashSet<>();
+        for (Transaccion tran: transacciones){
+            categoria.add(tran.getCategoria());
+        }
+        return  categoria;
+    }
+
 
     public ResumenDto analizar(List<Transaccion> transacciones){
-        ResumenDto newResumen= new ResumenDto(
+        return new ResumenDto(
                 montoTotal(transacciones),
                 cantidadClientes(transacciones),
                 separarPorTipoMoneda(transacciones),
                 montoMaximo(transacciones),
-                montoMinimo(transacciones));
-        return null;
+                montoMinimo(transacciones),
+                porTipo(transacciones),
+                porCategoria(transacciones));
+
     }
 
 }
