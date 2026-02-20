@@ -3,21 +3,22 @@ package com.example.leerDatos.services;
 import com.example.leerDatos.entitys.ResumenDto;
 import com.example.leerDatos.entitys.Transaccion;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class DataAnalysisService {
 
 
 
-    private int montoTotal(List<Transaccion> transacciones){
-        int totalMonto =0 ;
+    private BigDecimal montoTotal(List<Transaccion> transacciones){
+        BigDecimal totalMonto= BigDecimal.ZERO;
         for (Transaccion tran: transacciones){
-            totalMonto += Integer.parseInt(tran.getMonto());
+             totalMonto =totalMonto.add( tran.getMonto());
         }
         return  totalMonto;
     }
     private int cantidadClientes(List<Transaccion> transacciones){
-        int total =0 ;
+        int total = 0;
         for (Transaccion tran: transacciones){
             total += Integer.parseInt(tran.getCliente());
         }
@@ -32,12 +33,12 @@ public class DataAnalysisService {
         return  tipoMoneda;
     }
 
-    private int montoMaximo(List<Transaccion> transacciones){
-       int montoMax=0;
+    private BigDecimal montoMaximo(List<Transaccion> transacciones){
+        BigDecimal montoMax= transacciones.get(0).getMonto();
        for(Transaccion tran: transacciones){
-           int monto= Integer.parseInt(tran.getMonto());
-           if (monto>montoMax){
-               montoMax= monto;
+           BigDecimal monto= tran.getMonto();
+           if (monto.compareTo(montoMax)>0){
+               montoMax=  monto;
            }
        }
        return  montoMax;
@@ -45,11 +46,11 @@ public class DataAnalysisService {
 
 
 
-    private int montoMinimo(List<Transaccion> transacciones){
-        int montoMin=0;
+    private BigDecimal montoMinimo(List<Transaccion> transacciones){
+        BigDecimal montoMin= transacciones.get(0).getMonto();
         for(Transaccion tran: transacciones){
-            int monto= Integer.parseInt(tran.getMonto());
-            if (monto<montoMin){
+            BigDecimal monto= tran.getMonto();
+            if (monto.compareTo(montoMin)>0){
                 montoMin= monto;
             }
         }

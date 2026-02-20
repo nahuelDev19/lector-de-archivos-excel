@@ -20,7 +20,7 @@ public class DataTransformationService {
             BigDecimal monto= new BigDecimal(dto.getMonto());
             Transaccion transaccion= new Transaccion(dto.getFecha(),
                     dto.getCliente(),
-                    dto.getMonto(),
+                    monto,
                     dto.getMoneda());
 
         lista.add(transaccion);
