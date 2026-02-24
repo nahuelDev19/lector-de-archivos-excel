@@ -201,25 +201,7 @@ public class AnalisisTransaccionServiceImp implements AnalisisTransaccionService
 	}
 	
 	
-	/*public static void eliminarFilasConCeldasVacias(Sheet sheet) {
 
-	    Row header = sheet.getRow(0);
-	    int totalColumnas = header.getLastCellNum();
-
-	    for (int i = sheet.getLastRowNum(); i > 0; i--) { // >0 para no borrar cabecera
-	        Row row = sheet.getRow(i);
-
-	        if (tieneAlgunaCeldaVacia(row, totalColumnas)) {
-	            sheet.removeRow(row);
-
-	            if (i < sheet.getLastRowNum()) {
-	                sheet.shiftRows(i + 1, sheet.getLastRowNum(), -1);
-	            }
-	        }
-	    }
-	}
-
-*/
 
 	public static void eliminarFilasConUnSoloValor(Sheet sheet) {
 

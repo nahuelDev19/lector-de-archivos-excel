@@ -10,30 +10,28 @@ public class DataAnalysisService {
 
 
 
-    private BigDecimal montoTotal(List<Transaccion> transacciones){
+    public BigDecimal montoTotal(List<Transaccion> transacciones){
         BigDecimal totalMonto= BigDecimal.ZERO;
         for (Transaccion tran: transacciones){
              totalMonto =totalMonto.add( tran.getMonto());
         }
         return  totalMonto;
     }
-    private int cantidadClientes(List<Transaccion> transacciones){
+    public int cantidadClientes(List<Transaccion> transacciones){
         int total = 0;
         for (Transaccion tran: transacciones){
             total += Integer.parseInt(tran.getCliente());
         }
         return  total;
     }
-
-    private Set<String> separarPorTipoMoneda(List<Transaccion> transacciones){
+    public Set<String> separarPorTipoMoneda(List<Transaccion> transacciones){
         Set<String> tipoMoneda= new HashSet<>();
         for (Transaccion tran: transacciones){
             tipoMoneda.add(tran.getMoneda());
         }
         return  tipoMoneda;
     }
-
-    private BigDecimal montoMaximo(List<Transaccion> transacciones){
+    public BigDecimal montoMaximo(List<Transaccion> transacciones){
         BigDecimal montoMax= transacciones.get(0).getMonto();
        for(Transaccion tran: transacciones){
            BigDecimal monto= tran.getMonto();
@@ -43,10 +41,7 @@ public class DataAnalysisService {
        }
        return  montoMax;
     }
-
-
-
-    private BigDecimal montoMinimo(List<Transaccion> transacciones){
+    public BigDecimal montoMinimo(List<Transaccion> transacciones){
         BigDecimal montoMin= transacciones.get(0).getMonto();
         for(Transaccion tran: transacciones){
             BigDecimal monto= tran.getMonto();
@@ -56,16 +51,14 @@ public class DataAnalysisService {
         }
         return  montoMin;
     }
-
-    private Set<String>  porTipo(List<Transaccion> transacciones){
+    public Set<String>  porTipo(List<Transaccion> transacciones){
         Set<String> tipo= new HashSet<>();
         for (Transaccion tran: transacciones){
             tipo.add(tran.getTipo());
         }
         return  tipo;
     }
-
-    private Set<String>  porCategoria(List<Transaccion> transacciones){
+    public Set<String>  porCategoria(List<Transaccion> transacciones){
         Set<String> categoria= new HashSet<>();
         for (Transaccion tran: transacciones){
             categoria.add(tran.getCategoria());
@@ -73,6 +66,28 @@ public class DataAnalysisService {
         return  categoria;
     }
 
+    public Map<String,Integer> cantidadTransaccionPorCategoria(List<Transaccion> transaccions){
+
+        Map<String,Integer> mapCategorias=new HashMap<>();
+        for (Transaccion tran: transaccions){
+        String categoria= tran.getCategoria();
+            if(mapCategorias.containsKey(categoria)){
+                mapCategorias.put(tran.getCategoria(), mapCategorias.get(categoria)+1);
+            }else{
+                mapCategorias.put(categoria,1);
+            }
+
+        }
+        return mapCategorias;
+    }
+
+    public BigDecimal  filtrarMontoPorCategoria(List<Transaccion> transaccions, String categoriaBuscada){
+        if (transaccions==null || transaccions.isEmpty())return BigDecimal.ZERO;
+       return transaccions.stream().filter(f-> f.getCategoria() != null)
+                .filter(cat-> cat.getCategoria().equalsIgnoreCase(categoriaBuscada))
+                .map(t-> new BigDecimal(t.getMonto()))
+                .reduce(BigDecimal.ZERO , BigDecimal::add);
+    }
 
     public ResumenDto analizar(List<Transaccion> transacciones){
         return new ResumenDto(

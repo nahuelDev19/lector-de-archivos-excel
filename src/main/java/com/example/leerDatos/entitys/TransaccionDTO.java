@@ -15,7 +15,7 @@ public class TransaccionDTO {
 	@ExcelCellName("cliente")
 	private String cliente;
 	@ExcelCellName("monto")
-	private BigDecimal monto;
+	private String monto;
 	@ExcelCellName("moneda")
 	private String moneda;
 
@@ -25,7 +25,7 @@ public class TransaccionDTO {
 	public TransaccionDTO() {
 
 	}
-	public TransaccionDTO(String fecha, String cliente, BigDecimal monto, String moneda) {
+	public TransaccionDTO(String fecha, String cliente, String monto, String moneda) {
 		this.fecha = fecha;
 		this.cliente = cliente;
 		this.monto = monto;
@@ -33,7 +33,7 @@ public class TransaccionDTO {
 
 	}
 
-	public TransaccionDTO(String fecha, String cliente, BigDecimal monto, String moneda, String tipo, String categoria) {
+	public TransaccionDTO(String fecha, String cliente, String monto, String moneda, String tipo, String categoria) {
 		this(fecha, cliente, monto, moneda);
 		this.tipo = tipo;
 		this.categoria = categoria;

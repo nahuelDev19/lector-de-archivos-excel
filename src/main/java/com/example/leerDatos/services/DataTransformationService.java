@@ -15,12 +15,11 @@ public class DataTransformationService {
 	public List<Transaccion> transformar(List<TransaccionDTO> datos) {
         for (TransaccionDTO dto : datos) {
 
-
             //no estoy usando variable monto;
-            BigDecimal monto= new BigDecimal(dto.getMonto());
+           // BigDecimal monto= dto.getMonto();
             Transaccion transaccion= new Transaccion(dto.getFecha(),
                     dto.getCliente(),
-                    monto,
+                    dto.getMonto(),
                     dto.getMoneda());
 
         lista.add(transaccion);
