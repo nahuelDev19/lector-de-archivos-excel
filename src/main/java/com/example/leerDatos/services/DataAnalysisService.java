@@ -2,10 +2,12 @@ package com.example.leerDatos.services;
 
 import com.example.leerDatos.entitys.ResumenDto;
 import com.example.leerDatos.entitys.Transaccion;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
 
+@Service
 public class DataAnalysisService {
 
 

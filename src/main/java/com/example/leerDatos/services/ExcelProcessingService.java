@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.leerDatos.entitys.TransaccionDTO;
@@ -22,6 +23,7 @@ import org.apache.poi.ss.usermodel.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+@Service
 public class ExcelProcessingService {
 
 	private DataAnalysisService dataAnalysisService;
@@ -42,7 +44,6 @@ public class ExcelProcessingService {
 	}
 
 	public List<Transaccion> ejecutarPipeline(List<TransaccionDTO> datos){
-		 //limpieza
 		List<TransaccionDTO> datosLimpios= cleaningService.limpiar(datos);
 		List<TransaccionDTO> normalizado= normalizationService.normalizar(datosLimpios);
 		return transformationService.transformar(normalizado);

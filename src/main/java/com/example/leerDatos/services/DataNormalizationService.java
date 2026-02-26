@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.leerDatos.entitys.TransaccionDTO;
+import org.springframework.stereotype.Service;
+
 import  java.time.format.DateTimeFormatter;
+@Service
 public class DataNormalizationService {
 
 	 public List<TransaccionDTO> normalizar(List<TransaccionDTO> datos) {

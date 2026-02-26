@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.leerDatos.entitys.TransaccionDTO;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DataCleaningService {
 
     public List<TransaccionDTO> limpiar(List<TransaccionDTO> datos){
