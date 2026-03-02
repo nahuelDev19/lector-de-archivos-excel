@@ -2,7 +2,6 @@ package com.example.leerDatos.avancedpipeline;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class PipelineExecutor<I,O> {
 
@@ -13,7 +12,7 @@ public class PipelineExecutor<I,O> {
         steps.add(step);
     }
 
-    @SuppressWarnings("unchecket")
+    @SuppressWarnings("unchecked")
     public O excute(I input){
         Object current= input;
         for ( PipelineStepInterface s: steps){

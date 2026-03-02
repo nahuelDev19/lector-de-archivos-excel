@@ -2,9 +2,13 @@ package com.example.leerDatos.services;
 
 import com.example.leerDatos.entitys.ResumenDto;
 import com.example.leerDatos.entitys.Transaccion;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -15,7 +19,8 @@ public class DataAnalysisService {
     public BigDecimal montoTotal(List<Transaccion> transacciones){
         BigDecimal totalMonto= BigDecimal.ZERO;
         for (Transaccion tran: transacciones){
-             totalMonto =totalMonto.add( tran.getMonto());
+            BigDecimal newBig= new  BigDecimal(tran.getMonto());
+             totalMonto =totalMonto.add( newBig);
         }
         return  totalMonto;
     }
@@ -34,9 +39,10 @@ public class DataAnalysisService {
         return  tipoMoneda;
     }
     public BigDecimal montoMaximo(List<Transaccion> transacciones){
-        BigDecimal montoMax= transacciones.get(0).getMonto();
+
+        BigDecimal montoMax= new BigDecimal(transacciones.get(0).getMonto());
        for(Transaccion tran: transacciones){
-           BigDecimal monto= tran.getMonto();
+           BigDecimal monto= new BigDecimal( tran.getMonto());
            if (monto.compareTo(montoMax)>0){
                montoMax=  monto;
            }
@@ -44,9 +50,9 @@ public class DataAnalysisService {
        return  montoMax;
     }
     public BigDecimal montoMinimo(List<Transaccion> transacciones){
-        BigDecimal montoMin= transacciones.get(0).getMonto();
+        BigDecimal montoMin= new BigDecimal(transacciones.get(0).getMonto());
         for(Transaccion tran: transacciones){
-            BigDecimal monto= tran.getMonto();
+            BigDecimal monto= new BigDecimal(tran.getMonto());
             if (monto.compareTo(montoMin)>0){
                 montoMin= monto;
             }
@@ -87,7 +93,8 @@ public class DataAnalysisService {
         if (transaccions==null || transaccions.isEmpty())return BigDecimal.ZERO;
        return transaccions.stream().filter(f-> f.getCategoria() != null)
                 .filter(cat-> cat.getCategoria().equalsIgnoreCase(categoriaBuscada))
-                .map(t-> new BigDecimal(t.getMonto()))
+                //.map(Transaccion::getMonto)
+                .map(t -> new BigDecimal(t.getMonto()))
                 .reduce(BigDecimal.ZERO , BigDecimal::add);
     }
 
@@ -102,5 +109,62 @@ public class DataAnalysisService {
                 porCategoria(transacciones));
 
     }
+
+
+
+    public static String obtenerValorCelda(Cell cell) {
+
+        if (cell == null) {
+            return "";
+        }
+
+        switch (cell.getCellType()) {
+
+            case STRING:
+                return cell.getStringCellValue().trim();
+
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    LocalDate fecha = cell.getDateCellValue()
+                            .toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    return fecha.toString(); // formato ISO yyyy-MM-dd
+                } else {
+                    double valor = cell.getNumericCellValue();
+
+                    // Evita que 1500.0 salga como "1500.0"
+                    if (valor == (long) valor) {
+                        return String.valueOf((long) valor);
+                    }
+
+                    return String.valueOf(valor);
+                }
+
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+
+            case FORMULA:
+                return cell.getCellFormula();
+            // Alternativa profesional: evaluar fórmula con FormulaEvaluator
+
+            case BLANK:
+                return "";
+
+            default:
+                return "";
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -24,6 +24,9 @@ public class Resumen {
     private Set<String> tipo;
     private Set<String> categoria;
 
+    public Resumen() {
+    }
+
     public Resumen(BigDecimal montoTotal, int cantidadClientes, Set<String> separarPorTipoMoneda, BigDecimal montoMaximo, BigDecimal montoMinimo, Set<String> tipo, Set<String> categoria) {
         this.montoTotal = montoTotal;
         this.cantidadClientes = cantidadClientes;
