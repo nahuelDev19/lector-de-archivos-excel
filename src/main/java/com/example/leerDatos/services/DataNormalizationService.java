@@ -15,7 +15,13 @@ public class DataNormalizationService {
 			  dto.setFecha(convertirFechaISO(dto.getFecha()));
 			  dto.setMoneda(dto.getMoneda().toUpperCase().trim());
 			  dto.setCliente(dto.getCliente().toUpperCase().trim());
-
+			  // agregamos tipo y categoria
+			  dto.setTipo(dto.getTipo().trim());
+			  dto.setCategoria(dto.getCategoria().trim());
+			  if(dto.getMonto().isEmpty()){
+				  dto.setMonto("0");
+			  }
+			  dto.setMonto(dto.getMonto().replace(",",".").replaceAll("[^0-9.]", "").trim());
 		 }
 		 return  datos;
 	    }

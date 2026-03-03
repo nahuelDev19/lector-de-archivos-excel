@@ -22,7 +22,11 @@ public class DataTransformationService {
             Transaccion transaccion= new Transaccion(dto.getFecha(),
                     dto.getCliente(),
                     dto.getMonto(),
-                    dto.getMoneda());
+                    dto.getMoneda(),
+                    dto.getTipo(),
+                    dto.getCategoria()
+
+            );
 
         lista.add(transaccion);
         }

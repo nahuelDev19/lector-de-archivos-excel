@@ -110,4 +110,4 @@ public class ApplicationService {
 
 }
 
-// investigar y resol error en peticion uploads del controller. resolver imp de jpa para resumen y transaccion para que generen la tabla de bd.corroborar uso de cada endpoit del controller. elao un documento de texto que documente la funcionalidades de la api segun entrada tarea y salida
+// elao un documento de texto que documente la funcionalidades de la api segun entrada tarea y salida

@@ -73,7 +73,14 @@ public class ExcelProcessingService {
 		try (InputStream is = file.getInputStream();
 			 Workbook workbook = new XSSFWorkbook(is);) {
 			Sheet sheet = workbook.getSheetAt(0);
+
+			boolean primeraFila= true;
 			for (Row row : sheet) {
+				if (primeraFila){
+					primeraFila= false;
+					continue;
+				}
+
 				TransaccionDTO dto = new TransaccionDTO();
 				dto.setFecha(obtenerValorCelda(row.getCell(0)));
 				dto.setCliente(obtenerValorCelda(row.getCell(1)));
@@ -94,49 +101,5 @@ public class ExcelProcessingService {
 
 
 
-	/*
-	private String obtenerValorCelda(Cell cell) {
 
-		if (cell == null) {
-			return "";
-		}
-
-		switch (cell.getCellType()) {
-
-			case STRING:
-				return cell.getStringCellValue().trim();
-
-			case NUMERIC:
-				if (DateUtil.isCellDateFormatted(cell)) {
-					LocalDate fecha = cell.getDateCellValue()
-							.toInstant()
-							.atZone(ZoneId.systemDefault())
-							.toLocalDate();
-					return fecha.toString(); // formato ISO yyyy-MM-dd
-				} else {
-					double valor = cell.getNumericCellValue();
-
-					// Evita que 1500.0 salga como "1500.0"
-					if (valor == (long) valor) {
-						return String.valueOf((long) valor);
-					}
-
-					return String.valueOf(valor);
-				}
-
-			case BOOLEAN:
-				return String.valueOf(cell.getBooleanCellValue());
-
-			case FORMULA:
-				return cell.getCellFormula();
-			// Alternativa profesional: evaluar fórmula con FormulaEvaluator
-
-			case BLANK:
-				return "";
-
-			default:
-				return "";
-		}
-	}
-	 */
 }
