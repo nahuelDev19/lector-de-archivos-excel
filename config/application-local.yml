@@ -1,9 +1,11 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASS}
+    url: jdbc:postgresql://ep-autumn-violet-ah2a9n82-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+    username: neondb_owner
+    password: npg_DlJ16SXCjiBk
     driver-class-name: org.postgresql.Driver
+
+
 
   jpa:
     hibernate:
@@ -18,4 +20,4 @@ spring:
       mode: always
 
 server:
-  port: ${PORT}
+  port: 8080

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ApplicationService {
@@ -22,7 +23,6 @@ public class ApplicationService {
     private ExcelProcessingService excelProcessingService;
     private DataAnalysisService dataAnalysisService;
     private ExcelExportService excelExportService;
-
     private TransaccionRepo transaccionRepo;
     private ResumenRepo resumenRepo;
 
@@ -81,17 +81,38 @@ public class ApplicationService {
     }
 
     // era Integer, voy a cambiar por BigDecimal
-    public Map<String, BigDecimal> porCategoria(){
+/*    public Map<String, BigDecimal> porCategoria(String categoria ){
         List<Transaccion> transaccions= transaccionRepo.findAll();
-        Map<String, BigDecimal> categorias= new HashMap<>();
-        for (Transaccion tran: transaccions){
-            String categoria = tran.getCategoria();
-            BigDecimal monto = new BigDecimal(tran.getMonto());
 
-            categorias.put(categoria, categorias.getOrDefault(categoria,BigDecimal.ZERO).add(monto));
-        }
+        Map<String, BigDecimal> categorias= new HashMap<>();
+
+        for (Transaccion tran: transaccions){
+            if(tran.getCategoria().equalsIgnoreCase(categoria)){
+            String nombreCategoria = tran.getCategoria();
+            BigDecimal monto = new BigDecimal(tran.getMonto());
+            categorias.put(categoria, categorias.getOrDefault(nombreCategoria,BigDecimal.ZERO).add(monto));
+
         return  categorias;
+            }
+
+        }
+        return null;
     }
+*/
+        public Map<String, BigDecimal> porCategoria(String categoria){
+
+            List<Transaccion> transaccions= transaccionRepo.findByCategoria(categoria);
+            Map<String, BigDecimal> categorias= new HashMap<>();
+
+            for(Transaccion tran: transaccions) {
+                String nombreCategoria = tran.getCategoria();
+                BigDecimal monto = new BigDecimal(tran.getMonto());
+                categorias.put(nombreCategoria, categorias.getOrDefault(nombreCategoria,BigDecimal.ZERO).add(monto));
+            }
+            return categorias;
+        }
+
+
 
     public BigDecimal montoPorCategoria(String categoria){
         List<Transaccion> transaccions= transaccionRepo.findAll();
@@ -103,8 +124,6 @@ public class ApplicationService {
         List<Transaccion> transaccions= transaccionRepo.findAll();
         return excelExportService.exportarTransacciones(transaccions);
     }
-
-
 
 
 
