@@ -44,7 +44,7 @@ public class TransaccionController {
             )
     )
     @PostMapping("/upload")
-    public ResponseEntity<?> cargarArchivo(@RequestParam("archivo") MultipartFile file) {
+    public ResponseEntity<?> cargarArchivo(@RequestParam("file") MultipartFile file) {
        if (file==null){
            return ResponseEntity.badRequest().body("no llego el archivo");
        }else {
