@@ -122,7 +122,7 @@ public class TransaccionController {
 
         byte[] archivo= applicationService.exportarExcel();
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=resumen-transacciones.xlsx")
+                .header("Content-Disposition", "attachment; filename=transacciones-totales.xlsx")
                 .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 .body(archivo);
     }
