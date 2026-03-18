@@ -118,7 +118,12 @@ public class TransaccionController {
             )
 
     @GetMapping("/export")
-    public byte[] exportarExcel() throws Exception {
-        return applicationService.exportarExcel();
+    public ResponseEntity<byte[]>exportarExcel() throws Exception {
+
+        byte[] archivo= applicationService.exportarExcel();
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=resumen-transacciones.xlsx")
+                .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                .body(archivo);
     }
 }
