@@ -20,4 +20,4 @@ spring:
       mode: always
 
 server:
-  port: ${PORT}
+  port: ${PORT:8080}
