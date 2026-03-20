@@ -127,3 +127,18 @@ public class TransaccionController {
                 .body(archivo);
     }
 }
+/*
+Primero vamos a dejar el proyecto armado para portfolio corrigiendo algunos detalles:
+
+-en el DTO de entrada podés seguir recibiéndola como texto, porque viene desde Excel
+
+-en el procesamiento debe transformarse a un tipo de fecha real
+
+-en la entidad persistida debe almacenarse como fecha real
+Usá
+LocalDate si el archivo tiene solo fecha o LocalDateTime si querés hacer qué traiga fecha y hora
+ */
+
+/*
+Lo mismo con el tema de monto que ya lo podemos dejar para prod como BigDecimal
+ */

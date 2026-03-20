@@ -2,6 +2,7 @@ package com.example.leerDatos.services;
 
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +20,10 @@ public class DataTransformationService {
 
             //no estoy usando variable monto;
            // BigDecimal monto= dto.getMonto();
-            Transaccion transaccion= new Transaccion(dto.getFecha(),
+            Transaccion transaccion= new Transaccion(
+                    LocalDateTime.parse(dto.getFecha()),
                     dto.getCliente(),
-                    dto.getMonto(),
+                    new BigDecimal(dto.getMonto()),
                     dto.getMoneda(),
                     dto.getTipo(),
                     dto.getCategoria()
