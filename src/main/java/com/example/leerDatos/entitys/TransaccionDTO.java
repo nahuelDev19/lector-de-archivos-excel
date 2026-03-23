@@ -18,7 +18,6 @@ public class TransaccionDTO {
 	private String monto;
 	@ExcelCellName("moneda")
 	private String moneda;
-
 	private String tipo; // INGRESO o EGRESO
 	private String categoria; // ejemplo: comida, sueldo, alquiler
 

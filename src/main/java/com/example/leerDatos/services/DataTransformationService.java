@@ -2,7 +2,9 @@ package com.example.leerDatos.services;
 
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,19 +16,22 @@ import org.springframework.stereotype.Service;
 public class DataTransformationService {
 
     private List<Transaccion> lista= new ArrayList<>();
-	
+
+    DateTimeFormatter input= DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	public List<Transaccion> transformar(List<TransaccionDTO> datos) {
         for (TransaccionDTO dto : datos) {
 
-            //no estoy usando variable monto;
-           // BigDecimal monto= dto.getMonto();
+            LocalDate fecha= LocalDate.parse(dto.getFecha(), input);
+            DateTimeFormatter fechaSalida= DateTimeFormatter.ofPattern("yyyy-MM");
+            String periodo= fecha.format(fechaSalida);
             Transaccion transaccion= new Transaccion(
-                    LocalDateTime.parse(dto.getFecha()),
+                    fecha,
                     dto.getCliente(),
                     new BigDecimal(dto.getMonto()),
                     dto.getMoneda(),
                     dto.getTipo(),
-                    dto.getCategoria()
+                    dto.getCategoria(),
+                    periodo
 
             );
 

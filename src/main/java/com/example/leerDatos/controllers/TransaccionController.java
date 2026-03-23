@@ -2,7 +2,12 @@ package com.example.leerDatos.controllers;
 
 
 import com.example.leerDatos.entitys.ResumenDto;
+import com.example.leerDatos.exception.EtlProcessingException;
+import com.example.leerDatos.exception.GlobalExceptionHandler;
+import com.example.leerDatos.exception.InvalidFileFormatException;
 import com.example.leerDatos.services.ApplicationService;
+import com.example.leerDatos.services.FileProcessingService;
+import com.example.leerDatos.services.TransactionAnalysisService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,9 +28,13 @@ public class TransaccionController {
 
 
     private ApplicationService applicationService;
+    private TransactionAnalysisService transactionAnalysisService;
+    private FileProcessingService fileProcessingService;
 
-    public TransaccionController(ApplicationService applicationService) {
+    public TransaccionController(ApplicationService applicationService, TransactionAnalysisService transactionAnalysisService,FileProcessingService fileProcessingService) {
         this.applicationService = applicationService;
+        this.transactionAnalysisService= transactionAnalysisService;
+        this.fileProcessingService= fileProcessingService;
 
     }
 
@@ -46,10 +55,10 @@ public class TransaccionController {
     @PostMapping("/upload")
     public ResponseEntity<?> cargarArchivo(@RequestParam("file") MultipartFile file) {
        if (file==null){
-           return ResponseEntity.badRequest().body("no llego el archivo");
+           throw new InvalidFileFormatException("Archivo vacio");
        }else {
            System.out.println("antes de resumen dto");
-           ResumenDto resumen = applicationService.procesarArchivo(file);
+           ResumenDto resumen = fileProcessingService.procesarArchivo(file);
            return ResponseEntity.ok(resumen);
        }
 
@@ -68,7 +77,7 @@ public class TransaccionController {
     )
     @GetMapping("/total")
     public BigDecimal montoTotal() {
-        return  applicationService.total();
+        return  transactionAnalysisService.total();
     }
 
     @Operation(
@@ -82,7 +91,7 @@ public class TransaccionController {
     )
     @GetMapping("/por-categoria/{categoria}")
     public Map<String,BigDecimal> porCategoria(@PathVariable String categoria) {
-        return  applicationService.porCategoria(categoria);
+        return  transactionAnalysisService.porCategoria(categoria);
     }
 
     @Operation(
@@ -104,7 +113,7 @@ public class TransaccionController {
     @GetMapping("/monto-categoria/{categoria}")
     public BigDecimal montoPorCategoria(@PathVariable String categoria) {
         //tiene que consultar la db y usar la clase de analisis
-        return applicationService.montoPorCategoria(categoria);
+        return transactionAnalysisService.montoPorCategoria(categoria);
     }
 
     //GET /export → exporta todas las transacciones en Excel
@@ -120,7 +129,7 @@ public class TransaccionController {
     @GetMapping("/export")
     public ResponseEntity<byte[]>exportarExcel() throws Exception {
 
-        byte[] archivo= applicationService.exportarExcel();
+        byte[] archivo= fileProcessingService.exportarExcel();
         return ResponseEntity.ok()
                 .header("Content-Disposition", "attachment; filename=transacciones-totales.xlsx")
                 .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -141,4 +150,15 @@ LocalDate si el archivo tiene solo fecha o LocalDateTime si querés hacer qué t
 
 /*
 Lo mismo con el tema de monto que ya lo podemos dejar para prod como BigDecimal
+ */
+
+/*
+Después quiero que agregues atributos calculados sin cambiar el Excel a la hora de cargar una nueva transacción.
+No vas a modificar el archivo Excel de entrada. Vas a enriquecer la transacción durante el procesamiento para que cuando se guarde
+tenga un campo más que originalmente no estaba en el excel.
+Campos calculados recomendados:
+-periodo
+Valor derivado de la fecha con formato año-mes.
+Ejemplo:
+2025-02
  */
