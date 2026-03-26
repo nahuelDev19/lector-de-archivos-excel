@@ -2,8 +2,6 @@ package com.example.leerDatos.controllers;
 
 
 import com.example.leerDatos.entitys.ResumenDto;
-import com.example.leerDatos.exception.EtlProcessingException;
-import com.example.leerDatos.exception.GlobalExceptionHandler;
 import com.example.leerDatos.exception.InvalidFileFormatException;
 import com.example.leerDatos.services.ApplicationService;
 import com.example.leerDatos.services.FileProcessingService;
@@ -54,13 +52,17 @@ public class TransaccionController {
     )
     @PostMapping("/upload")
     public ResponseEntity<?> cargarArchivo(@RequestParam("file") MultipartFile file) {
-       if (file==null){
+       if (file==null || file.isEmpty()){
            throw new InvalidFileFormatException("Archivo vacio");
-       }else {
-           System.out.println("antes de resumen dto");
+       }
+       String nombre= file.getOriginalFilename();
+       if(nombre==null || (!nombre.endsWith(".xls") && !nombre.endsWith(".xlsx"))){
+           throw new InvalidFileFormatException("Formato de Archivo no valido, Formatos validos xlsx o xls");
+       }
+
            ResumenDto resumen = fileProcessingService.procesarArchivo(file);
            return ResponseEntity.ok(resumen);
-       }
+
 
     }
     @Operation(
@@ -137,28 +139,11 @@ public class TransaccionController {
     }
 }
 /*
-Primero vamos a dejar el proyecto armado para portfolio corrigiendo algunos detalles:
-
--en el DTO de entrada podés seguir recibiéndola como texto, porque viene desde Excel
-
--en el procesamiento debe transformarse a un tipo de fecha real
-
--en la entidad persistida debe almacenarse como fecha real
-Usá
-LocalDate si el archivo tiene solo fecha o LocalDateTime si querés hacer qué traiga fecha y hora
- */
-
-/*
-Lo mismo con el tema de monto que ya lo podemos dejar para prod como BigDecimal
- */
-
-/*
-Después quiero que agregues atributos calculados sin cambiar el Excel a la hora de cargar una nueva transacción.
-No vas a modificar el archivo Excel de entrada. Vas a enriquecer la transacción durante el procesamiento para que cuando se guarde
-tenga un campo más que originalmente no estaba en el excel.
-Campos calculados recomendados:
--periodo
-Valor derivado de la fecha con formato año-mes.
-Ejemplo:
-2025-02
+✓ ? Archivo no enviado o vacío
+✓Formato inválido (no es .xls / .xlsx)
+✓ Archivo sin fila de encabezados
+✓ Faltan columnas obligatorias (fecha, descripción, monto, categoría)
+->  ? Datos inválidos dentro del Excel (montos incorrectos, celdas vacías críticas, etc.)
+-> ? Error al leer el archivo (fallo técnico)
+ Error al guardar el resumen en base de datos
  */

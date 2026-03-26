@@ -4,9 +4,12 @@ import com.example.leerDatos.entitys.Resumen;
 import com.example.leerDatos.entitys.ResumenDto;
 import com.example.leerDatos.entitys.Transaccion;
 import com.example.leerDatos.entitys.TransaccionDTO;
+import com.example.leerDatos.exception.DatabaseOperationException;
 import com.example.leerDatos.repository.ResumenRepo;
 import com.example.leerDatos.repository.TransaccionRepo;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -53,7 +56,10 @@ public class FileProcessingService {
             transaccionRepo.save(transaccion);
         }
     }
-    private void creacionEntidadesJpaResumen(ResumenDto resumen) {
+
+    @Transactional
+    public void creacionEntidadesJpaResumen(ResumenDto resumen) {
+        try {
         Resumen resumenEntity= new Resumen(
                 resumen.getMontoTotal(),
                 resumen.getCantidadClientes(),
@@ -64,6 +70,9 @@ public class FileProcessingService {
                 resumen.getCategoria()
         );
         resumenRepo.save(resumenEntity);
+        }catch (DataAccessException e){
+            throw new DatabaseOperationException("Error en la base de datos al guardar Resumen",e);
+        }
     }
 
 
