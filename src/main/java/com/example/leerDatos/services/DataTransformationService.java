@@ -24,6 +24,7 @@ public class DataTransformationService {
 
         for (TransaccionDTO dto : datos) {
 
+
             validarDatosCorrectos(dto);
             LocalDate fecha= LocalDate.parse(dto.getFecha(), input);
             DateTimeFormatter fechaSalida= DateTimeFormatter.ofPattern("yyyy-MM");
@@ -44,6 +45,7 @@ public class DataTransformationService {
         }
         return lista;
     }
+
 
     private void validarDatosCorrectos(TransaccionDTO dto){
         List<String> errores= new ArrayList<>();

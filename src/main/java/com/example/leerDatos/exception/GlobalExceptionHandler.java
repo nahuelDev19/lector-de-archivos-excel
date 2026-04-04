@@ -4,10 +4,12 @@ package com.example.leerDatos.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -30,7 +32,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             InvalidFileFormatException.class,
-            MissingRequiredColumnsException.class,
             InvalidTransactionDataException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequestExceptions(
@@ -96,4 +97,22 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
+
+    @ExceptionHandler(MissingRequiredColumnsException.class)
+    public ResponseEntity<ErrorResponse> handleMissingCollumException(
+            Exception exception,
+            List<String> exceptionDetail
+    ) {
+        exception.printStackTrace();
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                String.join(", ",exceptionDetail),
+                ""
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
 }

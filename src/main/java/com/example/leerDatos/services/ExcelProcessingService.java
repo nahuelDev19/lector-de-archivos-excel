@@ -68,6 +68,7 @@ public class ExcelProcessingService {
 			Sheet sheet = workbook.getSheetAt(0);
 
 			Row headerRow= sheet.getRow(0);
+
 			if (headerRow==null){
 				throw new MissingRequiredColumnsException("El documento debe contener los Encabezados");
 			}
@@ -123,6 +124,7 @@ public class ExcelProcessingService {
 	 */
 
 	private void validarColumna(Row row){
+
 		List<String> columnaObligatoria= List.of("fecha","cliente","monto","moneda","categoria","tipo");
 		List<String> columnasExistentes= new ArrayList<>();
 		List<String> faltante= new ArrayList<>();

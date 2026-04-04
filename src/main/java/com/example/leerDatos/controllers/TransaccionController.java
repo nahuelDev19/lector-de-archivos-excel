@@ -1,22 +1,33 @@
 package com.example.leerDatos.controllers;
 
+import java.util.Collections;
 
 import com.example.leerDatos.entitys.ResumenDto;
-import com.example.leerDatos.exception.InvalidFileFormatException;
-import com.example.leerDatos.services.ApplicationService;
+import com.example.leerDatos.entitys.Transaccion;
+import com.example.leerDatos.entitys.TransaccionDTO;
+import com.example.leerDatos.exception.*;
 import com.example.leerDatos.services.FileProcessingService;
 import com.example.leerDatos.services.TransactionAnalysisService;
+import com.example.leerDatos.services.TransactionsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Tag(name = "Transacciones", description = "controller de transacciones")
 @RestController
@@ -25,15 +36,14 @@ public class TransaccionController {
 
 
 
-    private ApplicationService applicationService;
     private TransactionAnalysisService transactionAnalysisService;
     private FileProcessingService fileProcessingService;
+    private TransactionsService transactionsService;
 
-    public TransaccionController(ApplicationService applicationService, TransactionAnalysisService transactionAnalysisService,FileProcessingService fileProcessingService) {
-        this.applicationService = applicationService;
+    public TransaccionController( TransactionAnalysisService transactionAnalysisService,FileProcessingService fileProcessingService, TransactionsService transactionsService) {
         this.transactionAnalysisService= transactionAnalysisService;
         this.fileProcessingService= fileProcessingService;
-
+        this.transactionsService = transactionsService;
     }
 
     //POST /upload → recibe el Excel, procesa y devuelve el resumen
@@ -51,7 +61,7 @@ public class TransaccionController {
             )
     )
     @PostMapping("/upload")
-    public ResponseEntity<?> cargarArchivo(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> cargarArchivo(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
        if (file==null || file.isEmpty()){
            throw new InvalidFileFormatException("Archivo vacio");
        }
@@ -60,8 +70,12 @@ public class TransaccionController {
            throw new InvalidFileFormatException("Formato de Archivo no valido, Formatos validos xlsx o xls");
        }
 
+       try{
            ResumenDto resumen = fileProcessingService.procesarArchivo(file);
            return ResponseEntity.ok(resumen);
+       }catch (DatabaseOperationException e){
+           return new GlobalExceptionHandler().handleDatabaseOperationException(e, request);
+       }
 
 
     }
@@ -137,6 +151,65 @@ public class TransaccionController {
                 .header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 .body(archivo);
     }
+
+    //<--------------------------------CRUD-------------------------------->
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Transaccion> findById(@PathVariable UUID id){
+
+        Transaccion transaccion= transactionsService.findById(id);
+            return ResponseEntity.ok(transaccion);
+
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@Valid @RequestBody TransaccionDTO dto, BindingResult result){
+
+        if (result.hasErrors()){
+           return new GlobalExceptionHandler().handleMissingCollumException(new Exception(),generateMessagesErrror(result));
+        }
+
+        TransaccionDTO transaccionDTO= transactionsService.create(dto);
+        return ResponseEntity.ok(transaccionDTO);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable UUID id,
+                                    @Valid @RequestBody TransaccionDTO dto,
+                                    BindingResult result) {
+        if (result.hasErrors()){
+            return ResponseEntity.badRequest().body(generateMessagesErrror(result));
+        }
+        TransaccionDTO updated = transactionsService.update(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
+
+        transactionsService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+
+    private List<String> generateMessagesErrror(BindingResult result){
+        if (result.hasErrors()){
+            return result.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+
+
+
+
+
 }
 /*
 ✓ ? Archivo no enviado o vacío
@@ -145,5 +218,5 @@ public class TransaccionController {
 ✓ Faltan columnas obligatorias (fecha, descripción, monto, categoría)
 ->  ? Datos inválidos dentro del Excel (montos incorrectos, celdas vacías críticas, etc.)
 -> ? Error al leer el archivo (fallo técnico)
- Error al guardar el resumen en base de datos
+-> ? Error al guardar el resumen en base de datos
  */
