@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -50,16 +51,32 @@ public class TransaccionController {
 
     @Operation(
             summary = "Subir archivo Excel",
-            description = "Carga un archivo XLSX y devuelve un resumen"
+            description = "Carga un archivo XLS/XLSX y devuelve un resumen"
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Archivo procesado correctamente",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ResumenDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Archivo procesado correctamente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ResumenDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Archivo inválido o vacío",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error al procesar el archivo o guardar en base de datos",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
             )
-    )
+    })
     @PostMapping("/upload")
     public ResponseEntity<?> cargarArchivo(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
        if (file==null || file.isEmpty()){
@@ -79,6 +96,8 @@ public class TransaccionController {
 
 
     }
+
+
     @Operation(
             summary = "obtener monto total",
             description = "devuelve la suma total de todas las transferencias"
@@ -95,6 +114,7 @@ public class TransaccionController {
     public BigDecimal montoTotal() {
         return  transactionAnalysisService.total();
     }
+
 
     @Operation(
             summary = "obtener monto total por categoria",
@@ -155,14 +175,37 @@ public class TransaccionController {
     //<--------------------------------CRUD-------------------------------->
 
 
+    @Operation(summary = "Obtener transaccion por id")
+    @ApiResponses( value ={
+            @ApiResponse(responseCode = "200", description = "Transaccion encontrada"),
+            @ApiResponse(responseCode = "404", description = "Transaccion no encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<Transaccion> findById(@PathVariable UUID id){
-
         Transaccion transaccion= transactionsService.findById(id);
             return ResponseEntity.ok(transaccion);
 
     }
 
+    @Operation(summary = "Crear nueva transacción")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Transacción creada exitosamente"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error de validación",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody TransaccionDTO dto, BindingResult result){
 
@@ -174,6 +217,28 @@ public class TransaccionController {
         return ResponseEntity.ok(transaccionDTO);
     }
 
+    @Operation(summary = "Actualizar una transacción")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Transacción actualizada correctamente"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error de validación",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Transacción no encontrada",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id,
                                     @Valid @RequestBody TransaccionDTO dto,
@@ -185,6 +250,24 @@ public class TransaccionController {
         return ResponseEntity.ok(updated);
     }
 
+
+    @Operation(summary = "Eliminar una transacción")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Transacción eliminada correctamente"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Transacción no encontrada",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error interno del servidor",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
 
