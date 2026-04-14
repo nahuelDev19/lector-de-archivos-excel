@@ -12,6 +12,4 @@ import java.util.UUID;
 public interface TransaccionRepo extends JpaRepository<Transaccion, UUID> {
 
     List<Transaccion> findByCategoria(String categoria);
-
-
 }

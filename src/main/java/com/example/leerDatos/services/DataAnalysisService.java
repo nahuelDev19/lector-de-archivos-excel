@@ -19,7 +19,7 @@ public class DataAnalysisService {
     public BigDecimal montoTotal(List<Transaccion> transacciones){
         BigDecimal totalMonto= BigDecimal.ZERO;
         for (Transaccion tran: transacciones){
-            BigDecimal newBig= new  BigDecimal(tran.getMonto());
+            BigDecimal newBig= tran.getMonto();
              totalMonto =totalMonto.add( newBig);
         }
         return  totalMonto;
@@ -40,9 +40,9 @@ public class DataAnalysisService {
     }
     public BigDecimal montoMaximo(List<Transaccion> transacciones){
 
-        BigDecimal montoMax= new BigDecimal(transacciones.get(0).getMonto());
+        BigDecimal montoMax= transacciones.get(0).getMonto();
        for(Transaccion tran: transacciones){
-           BigDecimal monto= new BigDecimal( tran.getMonto());
+           BigDecimal monto= tran.getMonto();
            if (monto.compareTo(montoMax)>0){
                montoMax=  monto;
            }
@@ -50,10 +50,10 @@ public class DataAnalysisService {
        return  montoMax;
     }
     public BigDecimal montoMinimo(List<Transaccion> transacciones){
-        BigDecimal montoMin= new BigDecimal(transacciones.get(0).getMonto());
+        BigDecimal montoMin= transacciones.get(0).getMonto();
         for(Transaccion tran: transacciones){
-            BigDecimal monto= new BigDecimal(tran.getMonto());
-            if (monto.compareTo(montoMin)>0){
+            BigDecimal monto= tran.getMonto();
+            if (monto.compareTo(montoMin)<0){
                 montoMin= monto;
             }
         }
@@ -94,7 +94,7 @@ public class DataAnalysisService {
        return transaccions.stream().filter(f-> f.getCategoria() != null)
                 .filter(cat-> cat.getCategoria().equalsIgnoreCase(categoriaBuscada))
                 //.map(Transaccion::getMonto)
-                .map(t -> new BigDecimal(t.getMonto()))
+                .map(t -> t.getMonto())
                 .reduce(BigDecimal.ZERO , BigDecimal::add);
     }
 

@@ -1,7 +1,6 @@
 package com.example.leerDatos.services;
 
 import com.example.leerDatos.entitys.Transaccion;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,7 +32,7 @@ public class ExcelExportService {
             Row row= sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(t.getFecha());
             row.createCell(1).setCellValue(t.getCliente());
-            row.createCell(2).setCellValue(t.getMonto());
+            row.createCell(2).setCellValue( t.getMonto().toString());
             row.createCell(3).setCellValue(t.getMoneda());
             row.createCell(4).setCellValue(t.getCategoria());
             row.createCell(5).setCellValue(t.getTipo());
