@@ -53,7 +53,7 @@ public class DataAnalysisService {
         BigDecimal montoMin= transacciones.get(0).getMonto();
         for(Transaccion tran: transacciones){
             BigDecimal monto= tran.getMonto();
-            if (monto.compareTo(montoMin)>0){
+            if (monto.compareTo(montoMin)<0){
                 montoMin= monto;
             }
         }

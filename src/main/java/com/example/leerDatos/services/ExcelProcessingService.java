@@ -25,7 +25,6 @@ import static com.example.leerDatos.services.DataAnalysisService.obtenerValorCel
 @Service
 public class ExcelProcessingService {
 
-	private DataAnalysisService dataAnalysisService;
 	private DataNormalizationService normalizationService;
 	private DataTransformationService transformationService;
 	private DataCleaningService cleaningService;
@@ -33,13 +32,12 @@ public class ExcelProcessingService {
 
 	public ExcelProcessingService(DataCleaningService cleaningService,
 								  DataNormalizationService normalizationService,
-								  DataTransformationService transformationService,
-								  DataAnalysisService dataAnalysisService) {
+								  DataTransformationService transformationService
+								 ) {
 
 		this.cleaningService = cleaningService;
 		this.normalizationService = normalizationService;
 		this.transformationService = transformationService;
-		this.dataAnalysisService = dataAnalysisService;
 	}
 
 	public List<Transaccion> ejecutarPipeline(List<TransaccionDTO> datos) {
@@ -105,23 +103,6 @@ public class ExcelProcessingService {
 
 
 
-	/*private void validarEncabezado(Row headerRow){
-		List<String> esperados= List.of("fecha","cliente","monto","moneda","categoria","tipo");
-
-		for(int i =0 ; i< esperados.size(); i++){
-			Cell cel = headerRow.getCell(i);
-			if (cel== null){
-				throw new MissingRequiredColumnsException("Falta encabezado en columna " + i);
-			}
-
-			String valor= cel.toString().toLowerCase();
-			if(!valor.equals(esperados.get(i))){
-				throw new MissingRequiredColumnsException("Encabezado incorrecto en columna "+ i);
-			}
-		}
-	}
-
-	 */
 
 	private void validarColumna(Row row){
 

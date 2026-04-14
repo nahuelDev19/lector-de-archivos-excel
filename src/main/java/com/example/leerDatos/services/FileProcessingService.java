@@ -70,7 +70,6 @@ public class FileProcessingService {
                 resumen.getCategoria()
         );
 
-        // en este caso crea el resumen pero las transacciones se realizaron con éxito
         resumenRepo.save(resumenEntity);
 
         }catch (DataAccessException e){
@@ -79,33 +78,8 @@ public class FileProcessingService {
     }
 
 
-    /*
-    @Transactional
-public void creacionEntidadesJpaResumen(ResumenDto resumen) {
-    try {
-        Resumen resumenEntity = new Resumen(...);
-        Resumen saved = resumenRepo.save(resumenEntity);
-        resumenRepo.flush(); // opcional: detecta errores ahora
-        if (saved.getId() == null) {
-            throw new DatabaseOperationException("No se generó ID tras guardar Resumen");
-        }
-    } catch (DataAccessException | PersistenceException e) {
-        throw new DatabaseOperationException("Error en la base de datos al guardar Resumen", e);
-    }
-}
 
 
-❗ Ese if (saved.getId() == null) sobra
-
-👉 No es confiable ni necesario.
-
-Porque:
-
-JPA puede asignar el ID antes del insert real
-O puede no asignarlo aún dependiendo de la estrategia
-
-👉 O sea: no garantiza nada
-     */
 
 
     public byte[] exportarExcel() throws Exception {
