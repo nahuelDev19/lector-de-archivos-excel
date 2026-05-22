@@ -1,45 +1,45 @@
+# 📊 API de Procesamiento de Transacciones Excel
 
-# Lector de archivos excel
+API REST desarrollada con Spring Boot que procesa archivos Excel 
+de transacciones de forma automática a través de un pipeline de 
+datos, persiste la información en base de datos y genera resúmenes 
+estadísticos.
 
-API de Procesamiento de Transacciones
-📌 Descripción
+## 🚀 Tecnologías
 
-API REST desarrollada con Spring Boot que permite cargar un archivo Excel de transacciones y procesarlo automáticamente.
+- Java 17
+- Spring Boot
+- Spring Data JPA
+- PostgreSQL (NeonTech)
+- Apache POI
+- Swagger / OpenAPI
+- Maven
 
-El sistema:
+## ⚙️ ¿Cómo funciona?
 
-Lee el Excel usando Apache POI
-Limpia y normaliza los datos
-Procesa la información
-Guarda cada transacción en la base de datos (NeonTech)
-Genera un resumen en una tabla adicional
-Permite realizar operaciones CRUD sobre las transacciones
+Al cargar un archivo Excel, el sistema ejecuta un pipeline que:
 
-🚀 Tecnologías
-Java 17
-Spring Boot
-Spring Data JPA
-MySQL / NeonTech
-Apache POI
-Swagger (OpenAPI)
-Maven
+1. **Lee** el archivo usando Apache POI
+2. **Filtra y normaliza** los datos (limpieza de valores inválidos)
+3. **Persiste** cada transacción en la base de datos
+4. **Genera un resumen** con total, máximo y mínimo en una tabla aparte
 
-⚙️ Configuración
+## 📂 Funcionalidades
 
-Las credenciales de la base de datos se configuran mediante variables de entorno:
+- Carga y procesamiento de archivos Excel
+- Pipeline de limpieza y normalización de datos
+- CRUD completo de transacciones
+- Resumen estadístico automático (total, máximo, mínimo)
+- Documentación interactiva con Swagger
+
+## 🧪 Documentación API
+
+Disponible en: `http://localhost:8080/swagger-ui.html`
+
+## ⚙️ Configuración
+
+Configurar las siguientes variables de entorno:
 
 DB_URL=...
 DB_USERNAME=...
 DB_PASSWORD=...
-
-📂 Funcionalidades principales
-Carga de archivo Excel de transacciones
-Procesamiento de datos (limpieza y normalización)
-Persistencia en base de datos
-Generación de resumen de transacciones
-CRUD completo de transacciones
-
-🧪 Documentación API
-
-La documentación interactiva está disponible con Swagger:
-http://localhost:8080/swagger-ui.html
